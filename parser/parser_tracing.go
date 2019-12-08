@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-var enable = false
+var Enable = false
 var traceLevel int
 
 const traceIdentPlaceholder string = "  "
@@ -15,7 +15,7 @@ func identLevel() string {
 }
 
 func tracePrint(fs string) {
-	if enable {
+	if Enable {
 		fmt.Printf("%s%s\n", identLevel(), fs)
 	}
 }
