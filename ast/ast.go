@@ -2,6 +2,7 @@ package ast
 
 import (
 	"bytes"
+	"strings"
 
 	"github.com/imishinist/monkey/token"
 )
@@ -193,5 +194,53 @@ func (ie *BlockStatement) String() string {
 	for _, s := range ie.Statements {
 		out.WriteString(s.String())
 	}
+	return out.String()
+}
+
+type FunctionLiteral struct {
+	Token      token.Token
+	Parameters []*Identifier
+	Body       *BlockStatement
+}
+
+func (ie *FunctionLiteral) expressionNode()      {}
+func (ie *FunctionLiteral) TokenLiteral() string { return ie.Token.Literal }
+func (ie *FunctionLiteral) String() string {
+	var out bytes.Buffer
+
+	params := []string{}
+	for _, p := range ie.Parameters {
+		params = append(params, p.String())
+	}
+
+	out.WriteString(ie.TokenLiteral())
+	out.WriteString("(")
+	out.WriteString(strings.Join(params, ", "))
+	out.WriteString(") ")
+	out.WriteString(ie.Body.String())
+	return out.String()
+}
+
+type CallExpression struct {
+	Token     token.Token
+	Function  Expression
+	Arguments []Expression
+}
+
+func (ie *CallExpression) expressionNode()      {}
+func (ie *CallExpression) TokenLiteral() string { return ie.Token.Literal }
+func (ie *CallExpression) String() string {
+	var out bytes.Buffer
+
+	args := []string{}
+	for _, a := range ie.Arguments {
+		args = append(args, a.String())
+	}
+
+	out.WriteString(ie.Function.String())
+	out.WriteString("(")
+	out.WriteString(strings.Join(args, ", "))
+	out.WriteString(")")
+
 	return out.String()
 }
